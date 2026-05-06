@@ -97,6 +97,67 @@ st.markdown("""
     margin-bottom: 20px;
 }
 
+.info-title {
+    color: #F8FAFC;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.info-line {
+    color: #CBD5E1;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.info-value {
+    color: #F8FAFC;
+    font-weight: 800;
+}
+
+.recommend-high {
+    background: linear-gradient(135deg, rgba(127,29,29,0.65), rgba(30,41,59,0.78));
+    border: 1px solid rgba(248,113,113,0.38);
+}
+
+.recommend-medium {
+    background: linear-gradient(135deg, rgba(124,45,18,0.65), rgba(30,41,59,0.78));
+    border: 1px solid rgba(251,146,60,0.38);
+}
+
+.recommend-low {
+    background: linear-gradient(135deg, rgba(20,83,45,0.65), rgba(30,41,59,0.78));
+    border: 1px solid rgba(74,222,128,0.38);
+}
+
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.perf-box {
+    background: rgba(15,23,42,0.95);
+    border: 1px solid rgba(56,189,248,0.20);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+}
+
+.perf-label {
+    color: #94A3B8;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.perf-value {
+    color: #F8FAFC;
+    font-size: 22px;
+    font-weight: 900;
+}
+
 .alert-high {
     background: linear-gradient(135deg, rgba(127,29,29,0.75), rgba(69,10,10,0.85));
     border: 1px solid rgba(248,113,113,0.45);
@@ -211,6 +272,16 @@ hr {
     border-top: 1px solid rgba(148, 163, 184, 0.18);
     margin: 26px 0;
 }
+
+@media (max-width: 900px) {
+    .main-title {
+        font-size: 34px;
+    }
+
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -218,28 +289,48 @@ hr {
 # Simulated IDS Logic
 # -------------------------------------------------
 attack_types = ["Normal", "DDoS", "Spoofing", "Malware", "Ransomware"]
+devices = [
+    ("Sensor-01", "Vital Sensor", "Moderate"),
+    ("Monitor-02", "Patient Monitor", "High"),
+    ("Wearable-03", "Wearable Device", "Medium"),
+    ("Pump-04", "Infusion Pump", "Critical"),
+    ("Gateway-05", "IoMT Gateway", "High")
+]
+
 prediction = random.choice(attack_types)
 confidence = round(random.uniform(0.72, 0.98), 2)
 uncertainty = round(1 - confidence, 2)
+device_id, device_type, sensitivity = random.choice(devices)
 
 if prediction == "Normal":
     risk = "Low"
     selected_expert = "ML Expert: RF / LightGBM"
     hyper_mode = "Low-computation monitoring mode"
+    recommended_action = "Continue monitoring and store the event in the audit log."
+    recommendation_class = "recommend-low"
 elif prediction in ["DDoS", "Spoofing"]:
     risk = random.choice(["Medium", "High"])
     selected_expert = "CNN Expert"
     hyper_mode = "Traffic-pattern sensitivity mode"
+    recommended_action = "Increase monitoring sensitivity and validate traffic source integrity."
+    recommendation_class = "recommend-medium" if risk == "Medium" else "recommend-high"
 else:
     risk = "High"
     selected_expert = "FT-Transformer Expert"
     hyper_mode = "High-sensitivity deep analysis mode"
+    recommended_action = "Isolate the affected device, trigger high-priority alert, and escalate to SOC review."
+    recommendation_class = "recommend-high"
 
 risk_display = {
     "Low": "🟢 Low",
     "Medium": "🟠 Medium",
     "High": "🔴 High"
 }
+
+active_devices = random.randint(22, 38)
+packets_per_sec = random.randint(950, 1850)
+blocked_attempts = random.randint(6, 24) if risk != "Low" else random.randint(0, 4)
+avg_latency = random.randint(12, 28)
 
 # -------------------------------------------------
 # Header
@@ -307,6 +398,76 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+# -------------------------------------------------
+# Live Operational Intelligence
+# -------------------------------------------------
+st.markdown("<hr>", unsafe_allow_html=True)
+st.subheader("📡 Live Operational Intelligence")
+
+op1, op2, op3 = st.columns(3)
+
+with op1:
+    st.markdown(f"""
+    <div class="section-card">
+        <div class="info-title">🏥 Device Context</div>
+        <div class="info-line"><span class="info-value">Device ID:</span> {device_id}</div>
+        <div class="info-line"><span class="info-value">Device Type:</span> {device_type}</div>
+        <div class="info-line"><span class="info-value">Sensitivity:</span> {sensitivity}</div>
+        <div class="info-line"><span class="info-value">Priority:</span> {"Urgent" if risk == "High" else "Standard"}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with op2:
+    st.markdown(f"""
+    <div class="section-card {recommendation_class}">
+        <div class="info-title">🛡️ Risk Recommendation</div>
+        <div class="info-line"><span class="info-value">Recommended Action:</span></div>
+        <div class="info-line">{recommended_action}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with op3:
+    st.markdown(f"""
+    <div class="section-card">
+        <div class="info-title">⚡ Runtime Summary</div>
+        <div class="info-line"><span class="info-value">Active Devices:</span> {active_devices}</div>
+        <div class="info-line"><span class="info-value">Packets/sec:</span> {packets_per_sec}</div>
+        <div class="info-line"><span class="info-value">Blocked Attempts:</span> {blocked_attempts}</div>
+        <div class="info-line"><span class="info-value">Avg Latency:</span> {avg_latency} ms</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# -------------------------------------------------
+# Model Performance Snapshot
+# -------------------------------------------------
+st.markdown("""
+<div class="arch-card">
+    <div class="arch-title">📈 Model Performance Snapshot</div>
+    <div class="performance-grid">
+        <div class="perf-box">
+            <div class="perf-label">Accuracy</div>
+            <div class="perf-value">96.4%</div>
+        </div>
+        <div class="perf-box">
+            <div class="perf-label">Precision</div>
+            <div class="perf-value">94.1%</div>
+        </div>
+        <div class="perf-box">
+            <div class="perf-label">Recall</div>
+            <div class="perf-value">95.7%</div>
+        </div>
+        <div class="perf-box">
+            <div class="perf-label">F1-score</div>
+            <div class="perf-value">94.9%</div>
+        </div>
+        <div class="perf-box">
+            <div class="perf-label">Latency</div>
+            <div class="perf-value">18 ms</div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # -------------------------------------------------
@@ -369,7 +530,7 @@ with colA:
 
     alerts = pd.DataFrame({
         "Time": ["10:01", "10:05", "10:10", "10:14"],
-        "Device ID": ["Sensor-01", "Monitor-02", "Wearable-03", "Pump-04"],
+        "Device ID": ["Sensor-01", "Monitor-02", "Wearable-03", device_id],
         "Threat": ["DDoS", "Spoofing", "Malware", prediction],
         "Risk": ["High", "Medium", "High", risk],
         "Confidence": [0.94, 0.88, 0.91, confidence]
@@ -439,7 +600,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("""
 <div class="note-box">
     <b>Prototype note:</b> This dashboard simulates the behaviour of the proposed HyperGate-MoE-IDS architecture.
-    It does not yet implement the full trained Hypernetwork or MoE model.
+    It does not yet implement the full trained Hypernetwork or MoE model. Performance values are illustrative for prototype demonstration.
 </div>
 """, unsafe_allow_html=True)
 
