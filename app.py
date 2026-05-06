@@ -42,9 +42,13 @@ st.markdown("""
 }
 
 .main-title {
-    font-size: 44px;
+    font-size: clamp(30px, 4vw, 42px);
     font-weight: 900;
     color: #F8FAFC;
+    line-height: 1.15;
+    white-space: normal;
+    word-break: normal;
+    margin-bottom: 6px;
 }
 
 .subtitle {
@@ -297,6 +301,20 @@ hr {
     border-top: 1px solid rgba(148,163,184,0.18);
     margin: 26px 0;
 }
+
+@media (max-width: 900px) {
+    .main-title {
+        font-size: 32px;
+    }
+
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .expert-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -346,7 +364,11 @@ avg_latency = random.randint(12, 28)
 # -------------------------------------------------
 # Header + Filter Bar
 # -------------------------------------------------
-st.markdown('<div class="main-title">🔐 HyperGate-MoE-IDS Dashboard</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="main-title">🔐&nbsp; HyperGate-MoE-IDS Dashboard</div>',
+    unsafe_allow_html=True
+)
+
 st.markdown(
     '<div class="subtitle">Adaptive IoMT intrusion-detection prototype using Hypernetwork control, MoE expert routing, uncertainty estimation, and risk-aware decision logic.</div>',
     unsafe_allow_html=True
