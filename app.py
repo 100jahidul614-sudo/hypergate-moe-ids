@@ -30,25 +30,30 @@ with st.sidebar:
 # -------------------------------------------------
 st.markdown("""
 <style>
+header[data-testid="stHeader"] {
+    height: 0rem;
+    background: transparent;
+}
+
 .stApp {
     background: linear-gradient(135deg, #080B12 0%, #0E1117 45%, #111827 100%);
     color: #F8FAFC;
 }
 
 .block-container {
-    padding-top: 1.2rem;
+    padding-top: 3.8rem;
     padding-bottom: 2rem;
     max-width: 1450px;
 }
 
 .main-title {
-    font-size: clamp(30px, 4vw, 42px);
+    font-size: clamp(28px, 3.4vw, 38px);
     font-weight: 900;
     color: #F8FAFC;
-    line-height: 1.15;
+    line-height: 1.2;
     white-space: normal;
     word-break: normal;
-    margin-bottom: 6px;
+    margin-bottom: 12px;
 }
 
 .subtitle {
