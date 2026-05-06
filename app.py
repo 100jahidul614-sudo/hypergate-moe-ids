@@ -22,7 +22,7 @@ st.markdown("""
 }
 
 .block-container {
-    padding-top: 2rem;
+    padding-top: 1.4rem;
     padding-bottom: 2rem;
     max-width: 1400px;
 }
@@ -37,15 +37,15 @@ st.markdown("""
 .subtitle {
     font-size: 16px;
     color: #9CA3AF;
-    margin-bottom: 35px;
+    margin-bottom: 26px;
 }
 
 .status-card {
     background: linear-gradient(135deg, #122016, #0B2B1A);
     border: 1px solid #22C55E;
     border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 25px;
+    padding: 20px 24px;
+    margin-bottom: 22px;
     box-shadow: 0 8px 28px rgba(34, 197, 94, 0.15);
 }
 
@@ -55,7 +55,7 @@ st.markdown("""
     border-radius: 20px;
     padding: 24px;
     box-shadow: 0 10px 28px rgba(0,0,0,0.28);
-    min-height: 145px;
+    min-height: 135px;
 }
 
 .kpi-label {
@@ -70,6 +70,22 @@ st.markdown("""
     font-size: 31px;
     font-weight: 800;
     word-break: break-word;
+}
+
+.arch-card {
+    background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(30,41,59,0.72));
+    border: 1px solid rgba(56,189,248,0.28);
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-top: 22px;
+    color: #CBD5E1;
+}
+
+.arch-title {
+    color: #F8FAFC;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
 }
 
 .section-card {
@@ -113,16 +129,37 @@ st.markdown("""
     padding: 18px;
 }
 
+.flow-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
 .flow-box {
     background: rgba(15, 23, 42, 0.95);
-    border: 1px solid rgba(59,130,246,0.35);
+    border: 1px solid rgba(59,130,246,0.40);
     border-radius: 14px;
-    padding: 14px 10px;
+    padding: 14px 12px;
     text-align: center;
     font-weight: 700;
     color: #DBEAFE;
-    min-height: 70px;
+    min-height: 58px;
     font-size: 13px;
+    flex: 1;
+    min-width: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flow-arrow {
+    color: #38BDF8;
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
 }
 
 .note-box {
@@ -172,7 +209,7 @@ div[data-testid="stDataFrame"] {
 hr {
     border: none;
     border-top: 1px solid rgba(148, 163, 184, 0.18);
-    margin: 30px 0;
+    margin: 26px 0;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -256,6 +293,19 @@ with col4:
         <div class="kpi-value">{risk_display[risk]}</div>
     </div>
     """, unsafe_allow_html=True)
+
+# -------------------------------------------------
+# Architecture Summary
+# -------------------------------------------------
+st.markdown(f"""
+<div class="arch-card">
+    <div class="arch-title">🧬 Architecture Summary</div>
+    Hypernetwork control adjusts model behaviour according to traffic context and uncertainty.
+    MoE routing selects the most suitable expert model, while risk-aware logic converts the prediction into an operational security alert.
+    <br><br>
+    <b>Current route:</b> {hyper_mode} → {selected_expert} → {risk} risk decision.
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -372,11 +422,14 @@ flow_steps = [
     "Alert + Explainability"
 ]
 
-flow_cols = st.columns(len(flow_steps))
-
+flow_html = '<div class="flow-wrap">'
 for i, step in enumerate(flow_steps):
-    with flow_cols[i]:
-        st.markdown(f'<div class="flow-box">{step}</div>', unsafe_allow_html=True)
+    flow_html += f'<div class="flow-box">{step}</div>'
+    if i != len(flow_steps) - 1:
+        flow_html += '<div class="flow-arrow">→</div>'
+flow_html += '</div>'
+
+st.markdown(flow_html, unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
