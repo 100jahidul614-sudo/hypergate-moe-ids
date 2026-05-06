@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import random
-import plotly.express as px
 
 # -------------------------------------------------
 # Page Configuration
@@ -68,8 +67,9 @@ st.markdown("""
 
 .kpi-value {
     color: #F8FAFC;
-    font-size: 34px;
+    font-size: 31px;
     font-weight: 800;
+    word-break: break-word;
 }
 
 .section-card {
@@ -122,6 +122,7 @@ st.markdown("""
     font-weight: 700;
     color: #DBEAFE;
     min-height: 70px;
+    font-size: 13px;
 }
 
 .note-box {
@@ -131,6 +132,36 @@ st.markdown("""
     padding: 16px;
     color: #FEF3C7;
     font-size: 15px;
+}
+
+.bar-card {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 10px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    color: #F8FAFC;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.bar-bg {
+    background: rgba(51, 65, 85, 0.85);
+    border-radius: 999px;
+    height: 13px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    background: linear-gradient(90deg, #38BDF8, #2563EB);
+    height: 13px;
+    border-radius: 999px;
 }
 
 div[data-testid="stDataFrame"] {
@@ -305,36 +336,24 @@ with colB:
     explain_df = pd.DataFrame({
         "Feature": features,
         "Importance": importance
-    }).sort_values(by="Importance", ascending=True)
+    }).sort_values(by="Importance", ascending=False)
 
-    top_feature = explain_df.sort_values(by="Importance", ascending=False).iloc[0]["Feature"]
+    top_feature = explain_df.iloc[0]["Feature"]
     st.write(f"Top influencing feature: **{top_feature}**")
 
-    fig = px.bar(
-        explain_df,
-        x="Importance",
-        y="Feature",
-        orientation="h",
-        text="Importance",
-        range_x=[0, 1],
-        title="Feature Importance Ranking"
-    )
-
-    fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#F8FAFC"),
-        title_font=dict(size=18),
-        margin=dict(l=10, r=10, t=45, b=10),
-        height=360
-    )
-
-    fig.update_traces(
-        marker_color="#60A5FA",
-        textposition="outside"
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
+    for _, row in explain_df.iterrows():
+        percentage = int(row["Importance"] * 100)
+        st.markdown(f"""
+        <div class="bar-card">
+            <div class="bar-label">
+                <span>{row["Feature"]}</span>
+                <span>{row["Importance"]}</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar-fill" style="width:{percentage}%;"></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # -------------------------------------------------
 # System Flow
