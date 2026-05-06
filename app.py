@@ -2,14 +2,28 @@ import streamlit as st
 import pandas as pd
 import random
 
-# -------------------------------------------------
-# Page Configuration
-# -------------------------------------------------
 st.set_page_config(
     page_title="HyperGate-MoE-IDS Dashboard",
     page_icon="🔐",
     layout="wide"
 )
+
+# -------------------------------------------------
+# Sidebar
+# -------------------------------------------------
+with st.sidebar:
+    st.markdown("## 🔐 HyperGate")
+    st.markdown("### Navigation")
+    st.markdown("🧭 Dashboard")
+    st.markdown("🏥 Devices")
+    st.markdown("🚨 Alerts")
+    st.markdown("🧠 Models")
+    st.markdown("📊 Explainability")
+    st.markdown("⚙️ Settings")
+    st.markdown("---")
+    st.markdown("**System Mode:** Live Simulation")
+    st.markdown("**Deployment:** Edge–Fog–Cloud")
+    st.markdown("**Version:** Prototype v1.0")
 
 # -------------------------------------------------
 # Custom CSS
@@ -22,22 +36,30 @@ st.markdown("""
 }
 
 .block-container {
-    padding-top: 1.4rem;
+    padding-top: 1.2rem;
     padding-bottom: 2rem;
-    max-width: 1400px;
+    max-width: 1450px;
 }
 
 .main-title {
-    font-size: 46px;
-    font-weight: 800;
+    font-size: 44px;
+    font-weight: 900;
     color: #F8FAFC;
-    margin-bottom: 0px;
 }
 
 .subtitle {
     font-size: 16px;
     color: #9CA3AF;
-    margin-bottom: 26px;
+    margin-bottom: 22px;
+}
+
+.top-filter {
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(148,163,184,0.18);
+    border-radius: 18px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    color: #CBD5E1;
 }
 
 .status-card {
@@ -45,63 +67,43 @@ st.markdown("""
     border: 1px solid #22C55E;
     border-radius: 18px;
     padding: 20px 24px;
-    margin-bottom: 22px;
-    box-shadow: 0 8px 28px rgba(34, 197, 94, 0.15);
+    margin-bottom: 20px;
+    box-shadow: 0 8px 28px rgba(34,197,94,0.15);
 }
 
-.kpi-card {
-    background: rgba(17, 24, 39, 0.92);
-    border: 1px solid rgba(148, 163, 184, 0.18);
+.kpi-card, .section-card, .arch-card {
+    background: rgba(17,24,39,0.92);
+    border: 1px solid rgba(148,163,184,0.18);
     border-radius: 20px;
-    padding: 24px;
+    padding: 22px;
     box-shadow: 0 10px 28px rgba(0,0,0,0.28);
-    min-height: 135px;
+    margin-bottom: 18px;
 }
 
 .kpi-label {
     color: #9CA3AF;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 12px;
 }
 
 .kpi-value {
     color: #F8FAFC;
     font-size: 31px;
-    font-weight: 800;
+    font-weight: 900;
     word-break: break-word;
 }
 
 .arch-card {
     background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(30,41,59,0.72));
     border: 1px solid rgba(56,189,248,0.28);
-    border-radius: 18px;
-    padding: 18px 22px;
-    margin-top: 22px;
-    color: #CBD5E1;
 }
 
-.arch-title {
+.arch-title, .info-title {
     color: #F8FAFC;
     font-size: 18px;
-    font-weight: 800;
-    margin-bottom: 8px;
-}
-
-.section-card {
-    background: rgba(17, 24, 39, 0.88);
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-    margin-bottom: 20px;
-}
-
-.info-title {
-    color: #F8FAFC;
-    font-size: 18px;
-    font-weight: 800;
-    margin-bottom: 12px;
+    font-weight: 900;
+    margin-bottom: 10px;
 }
 
 .info-line {
@@ -117,17 +119,17 @@ st.markdown("""
 
 .recommend-high {
     background: linear-gradient(135deg, rgba(127,29,29,0.65), rgba(30,41,59,0.78));
-    border: 1px solid rgba(248,113,113,0.38);
+    border: 1px solid rgba(248,113,113,0.40);
 }
 
 .recommend-medium {
     background: linear-gradient(135deg, rgba(124,45,18,0.65), rgba(30,41,59,0.78));
-    border: 1px solid rgba(251,146,60,0.38);
+    border: 1px solid rgba(251,146,60,0.40);
 }
 
 .recommend-low {
     background: linear-gradient(135deg, rgba(20,83,45,0.65), rgba(30,41,59,0.78));
-    border: 1px solid rgba(74,222,128,0.38);
+    border: 1px solid rgba(74,222,128,0.40);
 }
 
 .performance-grid {
@@ -139,7 +141,7 @@ st.markdown("""
 
 .perf-box {
     background: rgba(15,23,42,0.95);
-    border: 1px solid rgba(56,189,248,0.20);
+    border: 1px solid rgba(56,189,248,0.22);
     border-radius: 14px;
     padding: 14px;
     text-align: center;
@@ -149,7 +151,6 @@ st.markdown("""
     color: #94A3B8;
     font-size: 13px;
     font-weight: 700;
-    margin-bottom: 6px;
 }
 
 .perf-value {
@@ -164,7 +165,7 @@ st.markdown("""
     border-radius: 16px;
     padding: 18px;
     color: #FCA5A5;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .alert-normal {
@@ -173,21 +174,75 @@ st.markdown("""
     border-radius: 16px;
     padding: 18px;
     color: #86EFAC;
-    font-weight: 700;
+    font-weight: 800;
+}
+
+.blue-box, .green-box {
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 14px;
 }
 
 .blue-box {
     background: linear-gradient(135deg, rgba(30,64,175,0.55), rgba(15,23,42,0.85));
     border: 1px solid rgba(96,165,250,0.35);
-    border-radius: 16px;
-    padding: 18px;
 }
 
 .green-box {
     background: linear-gradient(135deg, rgba(22,101,52,0.55), rgba(15,23,42,0.85));
     border: 1px solid rgba(74,222,128,0.35);
+}
+
+.expert-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.expert-card {
+    background: rgba(15,23,42,0.95);
+    border: 1px solid rgba(148,163,184,0.18);
     border-radius: 16px;
-    padding: 18px;
+    padding: 16px;
+    text-align: center;
+    color: #CBD5E1;
+}
+
+.expert-active {
+    border: 1px solid #38BDF8;
+    box-shadow: 0 0 22px rgba(56,189,248,0.25);
+    color: #F8FAFC;
+}
+
+.bar-card {
+    background: rgba(15,23,42,0.95);
+    border: 1px solid rgba(148,163,184,0.16);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 10px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    color: #F8FAFC;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.bar-bg {
+    background: rgba(51,65,85,0.85);
+    border-radius: 999px;
+    height: 13px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    background: linear-gradient(90deg, #38BDF8, #2563EB);
+    height: 13px;
+    border-radius: 999px;
 }
 
 .flow-wrap {
@@ -199,12 +254,12 @@ st.markdown("""
 }
 
 .flow-box {
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(15,23,42,0.95);
     border: 1px solid rgba(59,130,246,0.40);
     border-radius: 14px;
     padding: 14px 12px;
     text-align: center;
-    font-weight: 700;
+    font-weight: 800;
     color: #DBEAFE;
     min-height: 58px;
     font-size: 13px;
@@ -218,48 +273,18 @@ st.markdown("""
 .flow-arrow {
     color: #38BDF8;
     font-size: 24px;
-    font-weight: 800;
+    font-weight: 900;
     display: flex;
     align-items: center;
 }
 
 .note-box {
-    background: rgba(113, 63, 18, 0.35);
+    background: rgba(113,63,18,0.35);
     border: 1px solid rgba(234,179,8,0.35);
     border-radius: 16px;
     padding: 16px;
     color: #FEF3C7;
     font-size: 15px;
-}
-
-.bar-card {
-    background: rgba(15, 23, 42, 0.95);
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 10px;
-}
-
-.bar-label {
-    display: flex;
-    justify-content: space-between;
-    color: #F8FAFC;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.bar-bg {
-    background: rgba(51, 65, 85, 0.85);
-    border-radius: 999px;
-    height: 13px;
-    overflow: hidden;
-}
-
-.bar-fill {
-    background: linear-gradient(90deg, #38BDF8, #2563EB);
-    height: 13px;
-    border-radius: 999px;
 }
 
 div[data-testid="stDataFrame"] {
@@ -269,18 +294,8 @@ div[data-testid="stDataFrame"] {
 
 hr {
     border: none;
-    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    border-top: 1px solid rgba(148,163,184,0.18);
     margin: 26px 0;
-}
-
-@media (max-width: 900px) {
-    .main-title {
-        font-size: 34px;
-    }
-
-    .performance-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -321,11 +336,7 @@ else:
     recommended_action = "Isolate the affected device, trigger high-priority alert, and escalate to SOC review."
     recommendation_class = "recommend-high"
 
-risk_display = {
-    "Low": "🟢 Low",
-    "Medium": "🟠 Medium",
-    "High": "🔴 High"
-}
+risk_display = {"Low": "🟢 Low", "Medium": "🟠 Medium", "High": "🔴 High"}
 
 active_devices = random.randint(22, 38)
 packets_per_sec = random.randint(950, 1850)
@@ -333,13 +344,22 @@ blocked_attempts = random.randint(6, 24) if risk != "Low" else random.randint(0,
 avg_latency = random.randint(12, 28)
 
 # -------------------------------------------------
-# Header
+# Header + Filter Bar
 # -------------------------------------------------
 st.markdown('<div class="main-title">🔐 HyperGate-MoE-IDS Dashboard</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="subtitle">Adaptive IoMT intrusion-detection prototype using Hypernetwork control, MoE expert routing, uncertainty estimation, and risk-aware decision logic.</div>',
     unsafe_allow_html=True
 )
+
+st.markdown("""
+<div class="top-filter">
+    ⏱️ Time Window: <b>This Week</b> &nbsp;&nbsp; | &nbsp;&nbsp;
+    🏥 Device Group: <b>All IoMT Devices</b> &nbsp;&nbsp; | &nbsp;&nbsp;
+    🚨 Risk Filter: <b>High + Medium</b> &nbsp;&nbsp; | &nbsp;&nbsp;
+    📥 Report: <b>Ready for Export</b>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <div class="status-card">
@@ -354,36 +374,16 @@ st.markdown("""
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">Traffic Classification</div>
-        <div class="kpi-value">{prediction}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="kpi-card"><div class="kpi-label">Traffic Classification</div><div class="kpi-value">{prediction}</div></div>', unsafe_allow_html=True)
 
 with col2:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">Confidence Score</div>
-        <div class="kpi-value">{confidence}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="kpi-card"><div class="kpi-label">Confidence Score</div><div class="kpi-value">{confidence}</div></div>', unsafe_allow_html=True)
 
 with col3:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">Uncertainty Score</div>
-        <div class="kpi-value">{uncertainty}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="kpi-card"><div class="kpi-label">Uncertainty Score</div><div class="kpi-value">{uncertainty}</div></div>', unsafe_allow_html=True)
 
 with col4:
-    st.markdown(f"""
-    <div class="kpi-card">
-        <div class="kpi-label">Risk Level</div>
-        <div class="kpi-value">{risk_display[risk]}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="kpi-card"><div class="kpi-label">Risk Level</div><div class="kpi-value">{risk_display[risk]}</div></div>', unsafe_allow_html=True)
 
 # -------------------------------------------------
 # Architecture Summary
@@ -438,41 +438,89 @@ with op3:
     """, unsafe_allow_html=True)
 
 # -------------------------------------------------
-# Model Performance Snapshot
+# Visual Analytics
+# -------------------------------------------------
+st.markdown("<hr>", unsafe_allow_html=True)
+st.subheader("📊 Threat Analytics Overview")
+
+v1, v2, v3 = st.columns([1, 1.2, 1])
+
+with v1:
+    st.markdown('<div class="section-card"><div class="info-title">🧩 Threat Distribution</div>', unsafe_allow_html=True)
+    threat_dist = {
+        "DDoS": random.randint(20, 40),
+        "Spoofing": random.randint(15, 35),
+        "Malware": random.randint(10, 30),
+        "Ransomware": random.randint(5, 20),
+        "Normal": random.randint(20, 45)
+    }
+    total = sum(threat_dist.values())
+    for threat, count in threat_dist.items():
+        pct = int((count / total) * 100)
+        st.markdown(f"""
+        <div class="bar-card">
+            <div class="bar-label"><span>{threat}</span><span>{pct}%</span></div>
+            <div class="bar-bg"><div class="bar-fill" style="width:{pct}%;"></div></div>
+        </div>
+        """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with v2:
+    st.markdown('<div class="section-card"><div class="info-title">📈 Live Traffic Trend</div>', unsafe_allow_html=True)
+    traffic_df = pd.DataFrame({
+        "Time": [f"T-{i}" for i in range(20, 0, -1)],
+        "Packets/sec": [random.randint(800, 1900) for _ in range(20)]
+    }).set_index("Time")
+    st.line_chart(traffic_df, use_container_width=True, height=260)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with v3:
+    st.markdown("""
+    <div class="section-card">
+        <div class="info-title">🌍 Attack-Origin Intelligence</div>
+        <div class="info-line"><span class="info-value">Top Source Region:</span> External Network</div>
+        <div class="info-line"><span class="info-value">Suspicious IPs:</span> 14</div>
+        <div class="info-line"><span class="info-value">Most Targeted Asset:</span> IoMT Gateway</div>
+        <div class="info-line"><span class="info-value">Dominant Pattern:</span> Burst Traffic</div>
+        <div class="info-line"><span class="info-value">Geo Status:</span> Multi-source probing detected</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# -------------------------------------------------
+# Model Performance + Expert Routing
 # -------------------------------------------------
 st.markdown("""
 <div class="arch-card">
     <div class="arch-title">📈 Model Performance Snapshot</div>
     <div class="performance-grid">
-        <div class="perf-box">
-            <div class="perf-label">Accuracy</div>
-            <div class="perf-value">96.4%</div>
-        </div>
-        <div class="perf-box">
-            <div class="perf-label">Precision</div>
-            <div class="perf-value">94.1%</div>
-        </div>
-        <div class="perf-box">
-            <div class="perf-label">Recall</div>
-            <div class="perf-value">95.7%</div>
-        </div>
-        <div class="perf-box">
-            <div class="perf-label">F1-score</div>
-            <div class="perf-value">94.9%</div>
-        </div>
-        <div class="perf-box">
-            <div class="perf-label">Latency</div>
-            <div class="perf-value">18 ms</div>
-        </div>
+        <div class="perf-box"><div class="perf-label">Accuracy</div><div class="perf-value">96.4%</div></div>
+        <div class="perf-box"><div class="perf-label">Precision</div><div class="perf-value">94.1%</div></div>
+        <div class="perf-box"><div class="perf-label">Recall</div><div class="perf-value">95.7%</div></div>
+        <div class="perf-box"><div class="perf-label">F1-score</div><div class="perf-value">94.9%</div></div>
+        <div class="perf-box"><div class="perf-label">Latency</div><div class="perf-value">18 ms</div></div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown('<div class="arch-card"><div class="arch-title">🧠 MoE Expert Routing Visual</div><div class="expert-grid">', unsafe_allow_html=True)
+
+experts = ["ML Expert: RF / LightGBM", "CNN Expert", "FT-Transformer Expert"]
+for expert in experts:
+    active_class = "expert-active" if expert == selected_expert else ""
+    st.markdown(f"""
+    <div class="expert-card {active_class}">
+        <b>{expert}</b><br><br>
+        {"✅ Selected for current traffic" if expert == selected_expert else "Standby expert"}
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown('</div></div>', unsafe_allow_html=True)
 
 # -------------------------------------------------
 # Detection + Adaptive Behaviour
 # -------------------------------------------------
+st.markdown("<hr>", unsafe_allow_html=True)
+
 left, right = st.columns([1.1, 1])
 
 with left:
@@ -480,20 +528,12 @@ with left:
     st.subheader("📊 Detection Result")
 
     if prediction == "Normal":
-        st.markdown(
-            '<div class="alert-normal">Current traffic is classified as Normal. No immediate cyber threat detected.</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown('<div class="alert-normal">Current traffic is classified as Normal. No immediate cyber threat detected.</div>', unsafe_allow_html=True)
     else:
-        st.markdown(
-            f'<div class="alert-high">Potential cyber threat detected: {prediction}</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown(f'<div class="alert-high">Potential cyber threat detected: {prediction}</div>', unsafe_allow_html=True)
 
     st.markdown("#### Decision Interpretation")
-    st.write(
-        "The system combines prediction confidence, uncertainty level, and device-risk context before generating the final alert."
-    )
+    st.write("The system combines prediction confidence, uncertainty level, and device-risk context before generating the final alert.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with right:
@@ -505,11 +545,6 @@ with right:
         <b>⚙️ Hypernetwork Control</b><br><br>
         Adaptive mode activated: <b>{hyper_mode}</b>
     </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    st.markdown(f"""
     <div class="green-box">
         <b>🧩 MoE Expert Selection</b><br><br>
         Selected expert: <b>{selected_expert}</b>
@@ -533,7 +568,9 @@ with colA:
         "Device ID": ["Sensor-01", "Monitor-02", "Wearable-03", device_id],
         "Threat": ["DDoS", "Spoofing", "Malware", prediction],
         "Risk": ["High", "Medium", "High", risk],
-        "Confidence": [0.94, 0.88, 0.91, confidence]
+        "Confidence": [0.94, 0.88, 0.91, confidence],
+        "Status": ["Escalated", "Monitoring", "Investigating", "New"],
+        "Action": ["Block", "Validate", "Isolate", "Review"]
     })
 
     st.dataframe(alerts, use_container_width=True, hide_index=True)
@@ -556,13 +593,8 @@ with colB:
         percentage = int(row["Importance"] * 100)
         st.markdown(f"""
         <div class="bar-card">
-            <div class="bar-label">
-                <span>{row["Feature"]}</span>
-                <span>{row["Importance"]}</span>
-            </div>
-            <div class="bar-bg">
-                <div class="bar-fill" style="width:{percentage}%;"></div>
-            </div>
+            <div class="bar-label"><span>{row["Feature"]}</span><span>{row["Importance"]}</span></div>
+            <div class="bar-bg"><div class="bar-fill" style="width:{percentage}%;"></div></div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -573,14 +605,8 @@ st.markdown("<hr>", unsafe_allow_html=True)
 st.subheader("🔄 System Flow Simulation")
 
 flow_steps = [
-    "IoMT Data",
-    "Preprocessing",
-    "Context Encoding",
-    "Hypernetwork Adaptation",
-    "MoE Routing",
-    "Prediction + Uncertainty",
-    "Risk Decision",
-    "Alert + Explainability"
+    "IoMT Data", "Preprocessing", "Context Encoding", "Hypernetwork Adaptation",
+    "MoE Routing", "Prediction + Uncertainty", "Risk Decision", "Alert + Explainability"
 ]
 
 flow_html = '<div class="flow-wrap">'
@@ -594,9 +620,6 @@ st.markdown(flow_html, unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# -------------------------------------------------
-# Prototype Note + Refresh
-# -------------------------------------------------
 st.markdown("""
 <div class="note-box">
     <b>Prototype note:</b> This dashboard simulates the behaviour of the proposed HyperGate-MoE-IDS architecture.
